@@ -30,7 +30,7 @@ class CafeManagementDbOperation
 	public function getCafeGeoLocationList()
 	{
 
-		$sql = "SELECT ShopID,Latitude,Longitude FROM cafeGeoLocation";
+		$sql = "SELECT a.ShopID,a.Latitude,a.Longitude,b.Name FROM cafeGeoLocation AS a JOIN cafe AS b ON a.ShopID = b.ShopID";
 
 		$result = $this->conn->query($sql);
 
@@ -45,6 +45,7 @@ class CafeManagementDbOperation
 				$returnArray[$numberOfRow]["ShopID"] = $row["ShopID"];
 				$returnArray[$numberOfRow]["Latitude"] = $row["Latitude"];
 				$returnArray[$numberOfRow]["Longitude"] = $row["Longitude"];
+				$returnArray[$numberOfRow]["Name"] = $row["Name"];
 				$numberOfRow += 1;
 			}
 

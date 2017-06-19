@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 	}else
 	{
 
-		$response = $result;
+		$response['message'] = $result;
 		$response['error'] = false;
 	}
 
