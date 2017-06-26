@@ -15,6 +15,8 @@ define("PASSWORD_INCORRECT", 4);
 define("PASSWORD_CORRECT", 5);
 define("UPDATE_USERINFO_SUCCESSFULLY", 6);
 
+define("NO_RESULT",7);
+
 
 
 
