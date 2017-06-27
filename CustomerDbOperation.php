@@ -157,6 +157,73 @@ Class CustomerDbOperation
 
 	}
 
+	public function getUserFavouriteCafeList($Ph_number)
+	{
+		$stmt = $this->conn->prepare("SELECT a.ShopID,b.Name,b.Star FROM customerCafe AS a JOIN cafe AS b ON a.ShopID = b.ShopID WHERE a.Ph_number = ? ");
+		$stmt->bind_param("s",$Ph_number);
+
+		if ($stmt->execute()) 
+		{
+			$result = $stmt->get_result();
+			
+			if($result->num_rows > 0)
+			{
+
+				$returnArray = array();
+				$numberOfRow = 0;
+
+				while($row = $result->fetch_array(MYSQLI_ASSOC))
+				{
+					$returnArray[$numberOfRow] = $row;
+					$numberOfRow += 1;
+				}
+
+				return $returnArray;
+
+			}else
+			{
+				return NO_RESULT;
+			}
+
+		}else
+		{
+			return SQL_EXECUTE_ERROR;
+		}
+
+	}
+
+	public function deleteFavoriteCafe($Ph_number,$ShopID)
+	{
+		$stmt = $this->conn->prepare("DELETE FROM customerCafe WHERE Ph_number =? AND ShopID = ? ");
+		$stmt->bind_param("ss",$phone,$ShopID);
+
+		if ($stmt->execute())
+		{
+			return UPDATE_USERINFO_SUCCESSFULLY;
+
+		}else
+		{
+			return SQL_EXECUTE_ERROR;	
+		}
+
+	}
+
+	public function insertFavoriteCafe($Ph_number,$ShopID)
+	{
+		$stmt = $this->conn->prepare("INSERT INTO customerCafe(Ph_number,ShopID) VALUES () ");
+		$stmt->bind_param("ss",$phone,$ShopID);
+
+		if ($stmt->execute())
+		{
+			return UPDATE_USERINFO_SUCCESSFULLY;
+
+		}else
+		{
+			return SQL_EXECUTE_ERROR;	
+		}
+
+	}
+
 	private function checkUserExist($phone)
 	{
 		$stmt = $this->conn->prepare("SELECT id FROM customer WHERE Ph_number = ? ");
