@@ -16,14 +16,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 	$request_params = $_REQUEST;
 
-	if (!verifyRequiredParams(array(Ph_number),$request_params)) 
+	if (!verifyRequiredParams(array(Ph_number,UpdateInfo,Operation),$request_params)) 
 	{
-		echo $_POST[Ph_number];
+
+		$Ph_number = $_POST['Ph_number'];
+		$Operation = $_POST['Operation'];
+		$UpdateInfo = $_POST['UpdateInfo'];
+
+		//connect to db
+		$db = new CustomerDbOperation();
+		$result = UPDATE_USERINFO_SUCCESSFULLY;
+
+		if ($Operation == 'Delete')
+		{
+			//loop to delete info
+			foreach ($UpdateInfo as $key => $value) 
+			{
+
+				 $result = $db->deleteFavoriteCafe($Ph_number,$value);
+
+				 if($result == 'SQL_EXECUTE_ERROR')
+				 {
+				 	break;
+				 }
+
+			}
+
+
+
+		}elseif ($Operation == 'Insert') {
+			
+			foreach ($UpdateInfo as $key => $value) 
+			{
+
+				 $result = $db->insertFavoriteCafe($Ph_number,$value);
+
+				 if($result == 'SQL_EXECUTE_ERROR')
+				 {
+				 	break;
+				 }
+
+			}
+		}
+
+		if($result == UPDATE_USERINFO_SUCCESSFULLY)
+		{
+			$response['error'] = false;
+    		$response['message'] = 'Update Successfully';
+
+		}else
+		{
+			$response['error'] = true;
+    		$response['message'] = 'Some Error Occur';
+
+		}
+
+
 
 	}else
 	{
 		$response['error'] = true;
     	$response['message'] = 'Missed Required Information';
+
 	}
 
 	
@@ -43,7 +97,7 @@ function verifyRequiredParams($required_field,$request_params)
 	foreach ($required_field as $field) 
 	{
 		//check if a para is missing two situation one is unset and other is not vaule
-	 	if(!isset($request_params[$field]) || strlen(trim($request_params[$field])) <=0)
+	 	if(!isset($request_params[$field]))
 	 	{
 	 		//true means some params missing or unset
 	 		return true;
@@ -56,6 +110,6 @@ function verifyRequiredParams($required_field,$request_params)
 
 
 
-// echo json_encode($response);
+echo json_encode($response);
 
 ?>

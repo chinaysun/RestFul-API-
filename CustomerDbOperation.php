@@ -194,8 +194,8 @@ Class CustomerDbOperation
 
 	public function deleteFavoriteCafe($Ph_number,$ShopID)
 	{
-		$stmt = $this->conn->prepare("DELETE FROM customerCafe WHERE Ph_number =? AND ShopID = ? ");
-		$stmt->bind_param("ss",$phone,$ShopID);
+		$stmt = $this->conn->prepare("DELETE FROM customerCafe WHERE Ph_number =? AND ShopID = ?");
+		$stmt->bind_param("ss",$Ph_number,$ShopID);
 
 		if ($stmt->execute())
 		{
@@ -210,8 +210,8 @@ Class CustomerDbOperation
 
 	public function insertFavoriteCafe($Ph_number,$ShopID)
 	{
-		$stmt = $this->conn->prepare("INSERT INTO customerCafe(Ph_number,ShopID) VALUES () ");
-		$stmt->bind_param("ss",$phone,$ShopID);
+		$stmt = $this->conn->prepare("INSERT INTO customerCafe(Ph_number,ShopID) VALUES (?,?)");
+		$stmt->bind_param("ss",$Ph_number,$ShopID);
 
 		if ($stmt->execute())
 		{
@@ -220,6 +220,24 @@ Class CustomerDbOperation
 		}else
 		{
 			return SQL_EXECUTE_ERROR;	
+		}
+
+	}
+
+	public function checkFavoriteCafe($Ph_number,$ShopID)
+	{
+		$stmt = $this->conn->prepare("SELECT id FROM customerCafe WHERE Ph_number = ? AND ShopID = ?");
+		$stmt->bind_param("ss",$Ph_number,$ShopID);
+		$stmt->execute();
+		$stmt->store_result();
+
+		if ($stmt->num_rows > 0)
+		{
+			return CAFE_FOUND;
+
+		}else
+		{
+			return NO_RESULT;
 		}
 
 	}
