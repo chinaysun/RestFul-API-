@@ -104,6 +104,67 @@ class CafeManagementDbOperation
 
 	}
 
+	//get products
+	public function checkAvailableProductList($ShopID)
+	{
+
+		if($this->checkCafeExist($ShopID))
+		{
+			$stmt = $this->conn->prepare("SELECT Coffee,Dessert FROM cafeProduct WHERE ShopID = ?");
+			$stmt->bind_param("s",$ShopID);
+
+			if($stmt->execute())
+			{
+				$result = $stmt->get_result();
+				$result = $result->fetch_array(MYSQLI_ASSOC);
+
+
+				$returnResult = array();
+
+				foreach ($result as $key => $value) 
+				{
+
+					if ($value)
+					{
+						$sql = "SELECT ProductID FROM ".strtolower($key)." WHERE ShopID = ".$ShopID;
+						
+						$sqlResult = $this->conn->query($sql);
+
+						if($sqlResult)
+						{
+							$returnResult[$key] = $sqlResult->num_rows;
+
+						}else
+						{
+							return SQL_EXECUTE_ERROR;
+
+						}
+
+
+					}else
+					{
+						$returnResult[$key] = 0;
+
+					}
+
+				}
+
+				return $returnResult;
+
+			}else
+			{
+				return SQL_EXECUTE_ERROR;
+			
+			}
+
+		}else
+		{
+			return USER_DOES_NOT_EXIST;
+		}
+
+		
+	}
+
 	private function checkCafeExist($ShopID)
 	{
 		$stmt = $this->conn->prepare("SELECT ShopID FROM cafe WHERE ShopID = ? ");
