@@ -132,7 +132,7 @@ class CafeManagementDbOperation
 
 						if($sqlResult)
 						{
-							$returnResult[$key] = $sqlResult->num_rows;
+							$returnResult[strtolower($key)] = $sqlResult->num_rows;
 
 						}else
 						{
@@ -143,7 +143,7 @@ class CafeManagementDbOperation
 
 					}else
 					{
-						$returnResult[$key] = 0;
+						$returnResult[strtolower($key)] = 0;
 
 					}
 
