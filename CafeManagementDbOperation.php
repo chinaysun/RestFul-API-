@@ -165,6 +165,34 @@ class CafeManagementDbOperation
 		
 	}
 
+	public function getProductDetail($ShopID,$ProductType)
+	{
+		$sql = "SELECT * FROM ".strtolower($ProductType)." WHERE ShopID = ".$ShopID;
+
+		$sqlResult = $this->conn->query($sql);
+
+		if($sqlResult)
+		{
+			$returnArray = array();
+			$numberOfRow = 0;
+
+			while($row = $sqlResult->fetch_array(MYSQLI_ASSOC))
+			{
+				$returnArray[$numberOfRow] = $row;
+				$numberOfRow += 1;
+			}
+
+			return $returnArray;
+
+		}else
+		{
+			return SQL_EXECUTE_ERROR;
+
+		}
+
+		
+	}
+
 	private function checkCafeExist($ShopID)
 	{
 		$stmt = $this->conn->prepare("SELECT ShopID FROM cafe WHERE ShopID = ? ");
