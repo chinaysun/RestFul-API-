@@ -195,7 +195,7 @@ Class CustomerDbOperation
 	public function deleteFavoriteCafe($Ph_number,$ShopID)
 	{
 		$stmt = $this->conn->prepare("DELETE FROM customerCafe WHERE Ph_number =? AND ShopID = ?");
-		$stmt->bind_param("ss",$Ph_number,$ShopID);
+		$stmt->bind_param("si",$Ph_number,$ShopID);
 
 		if ($stmt->execute())
 		{
@@ -211,7 +211,7 @@ Class CustomerDbOperation
 	public function insertFavoriteCafe($Ph_number,$ShopID)
 	{
 		$stmt = $this->conn->prepare("INSERT INTO customerCafe(Ph_number,ShopID) VALUES (?,?)");
-		$stmt->bind_param("ss",$Ph_number,$ShopID);
+		$stmt->bind_param("si",$Ph_number,$ShopID);
 
 		if ($stmt->execute())
 		{
@@ -224,10 +224,37 @@ Class CustomerDbOperation
 
 	}
 
+	public function createOrder($ShopID,$CustomerID,$ReferenceID,$CreatedTime,$OrderStatus,$Message)
+	{
+
+		if (!$this->checkOrderExist($ReferenceID,$OrderStatus))
+		{
+
+			//INSERT IF NOT EXIST
+			$stmt = $this->conn->prepare("INSERT INTO customerOrder(ShopID,CustomerID,ReferenceID,CreatedTime,OrderStatus,Message) VALUES (?,?,?,?,?,?)");
+			$stmt->bind_param("isssss",$ShopID,$CustomerID,$ReferenceID,$CreatedTime,$OrderStatus,$Message);
+
+			if($stmt->execute())
+			{
+
+				return ORDER_CREATED;
+
+			}else
+			{
+				return SQL_EXECUTE_ERROR;
+			}
+			
+		}else
+		{
+			return ORDER_ALREADY_EXIST;
+		}
+
+	}
+
 	public function checkFavoriteCafe($Ph_number,$ShopID)
 	{
 		$stmt = $this->conn->prepare("SELECT id FROM customerCafe WHERE Ph_number = ? AND ShopID = ?");
-		$stmt->bind_param("ss",$Ph_number,$ShopID);
+		$stmt->bind_param("si",$Ph_number,$ShopID);
 		$stmt->execute();
 		$stmt->store_result();
 
@@ -251,6 +278,16 @@ Class CustomerDbOperation
 
 		return $stmt->num_rows > 0;
 
+	}
+
+	private function checkOrderExist($ReferenceID,$Status)
+	{
+		$stmt = $this->conn->prepare("SELECT id FROM customerOrder WHERE ReferenceID = ? AND OrderStatus = ?");
+		$stmt->bind_param("ss",$ReferenceID,$Status);
+		$stmt->execute();
+		$stmt->store_result();
+
+		return $stmt->num_rows > 0;
 	}
 
 }
