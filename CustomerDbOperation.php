@@ -251,6 +251,41 @@ Class CustomerDbOperation
 
 	}
 
+	public function getUserOrderHistoryList($CustomerID)
+	{
+		$stmt = $this->conn->prepare("SELECT * FROM customerOrder  WHERE CustomerID = ? ");
+		$stmt->bind_param("s",$CustomerID);
+
+		if ($stmt->execute()) 
+		{
+			$result = $stmt->get_result();
+			
+			if($result->num_rows > 0)
+			{
+
+				$returnArray = array();
+				$numberOfRow = 0;
+
+				while($row = $result->fetch_array(MYSQLI_ASSOC))
+				{
+					$returnArray[$numberOfRow] = $row;
+					$numberOfRow += 1;
+				}
+
+				return $returnArray;
+
+			}else
+			{
+				return NO_RESULT;
+			}
+
+		}else
+		{
+			return SQL_EXECUTE_ERROR;
+		}
+
+	}
+
 	public function checkFavoriteCafe($Ph_number,$ShopID)
 	{
 		$stmt = $this->conn->prepare("SELECT id FROM customerCafe WHERE Ph_number = ? AND ShopID = ?");
