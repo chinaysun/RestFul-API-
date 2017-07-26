@@ -16,8 +16,10 @@ define("PASSWORD_CORRECT", 5);
 define("UPDATE_USERINFO_SUCCESSFULLY", 6);
 
 define("NO_RESULT",7);
+define("CAFE_FOUND",8);
 
-
+define("ORDER_ALREADY_EXIST",9);
+define("ORDER_CREATED",10);
 
 
 ?>

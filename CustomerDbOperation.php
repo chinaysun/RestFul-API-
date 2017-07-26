@@ -229,10 +229,11 @@ Class CustomerDbOperation
 
 		if (!$this->checkOrderExist($ReferenceID,$OrderStatus))
 		{
+			$CompletedTime = "";
 
 			//INSERT IF NOT EXIST
-			$stmt = $this->conn->prepare("INSERT INTO customerOrder(ShopID,CustomerID,ReferenceID,CreatedTime,OrderStatus,Message) VALUES (?,?,?,?,?,?)");
-			$stmt->bind_param("isssss",$ShopID,$CustomerID,$ReferenceID,$CreatedTime,$OrderStatus,$Message);
+			$stmt = $this->conn->prepare("INSERT INTO customerOrder(ShopID,CustomerID,ReferenceID,CreatedTime,CompletedTime,OrderStatus,Message) VALUES (?,?,?,?,?,?,?)");
+			$stmt->bind_param("issssss",$ShopID,$CustomerID,$ReferenceID,$CreatedTime,$CompletedTime,$OrderStatus,$Message);
 
 			if($stmt->execute())
 			{
